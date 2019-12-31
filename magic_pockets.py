@@ -34,14 +34,16 @@ def del_item(item_id):
     
 
 def main():
+    print("input cnt: ")
+    cnt = input()
 
     payload = {
         'consumer_key':POCKET_consumer_key,
         'access_token': POCKET_access_token, 
         'state':'unread',
         'sort':'oldest',
-        'since' : 1487010000,
-        'count':300
+        'since' : 1500000000,
+        'count':cnt
         }
     r=requests.post('https://getpocket.com/v3/get',data=payload)
 
@@ -58,7 +60,7 @@ def main():
         try:
             r = requests.get(resolved_url,timeout=60)
             print(' STS : {},title : {}'.format(r.status_code,resolved_title)) 
-            if r.status_code == 200 :
+            if r.status_code != 404 :
                 OK_sum += 1
             else:
                 NG_sum += 1
@@ -67,7 +69,8 @@ def main():
             print(' STS : Err,title : {} '.format(resolved_title))
             NG_sum += 1
             del_item(item_id)     
-        except requests.exceptions.ReadTimeout :
+        except:
+            print('Exception Occured : continue')
             continue
 
 
